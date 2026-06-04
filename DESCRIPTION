@@ -1,11 +1,18 @@
 Package: eawsAnalysis
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: This package is used to analyse waterbird data from the Eastern Australian Waterbird Survey, and other associated waterbird surveys
+Version: 0.1
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Will", "Wright", , "will.wright@unsw.edu.au", role = c("aut", "cre"))
+Description: This package provides an interface to the data from the Eastern Australian Waterbird Survey, and other associated waterbird surveys, and functions to analyse these data, including maps, summary tables, and trend analyses.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
+Imports: 
+    dplyr,
+    rlang,
+    sf,
+    tidyr
+Depends: 
+    R (>= 3.5)
+LazyData: true
