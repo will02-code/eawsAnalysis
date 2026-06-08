@@ -1,6 +1,6 @@
 #' Extract cleaned waterbird data
 #'
-#' @param df cleaned and joined dataframe, either from 'clean_clip_raw_data()' or the package dataset 'data_clean'
+#' @param dataset cleaned and joined dataframe, either from 'clean_clip_raw_data()' or the package dataset 'data_clean'
 #' @param programs Which survey programs to include. This should be a character vector of one or more of "eastern australian survey", "eaws", "mdb combined", or "mdbws". Default eaws.
 #' @param wetlands which wetlands to include. This should be a character vector of wetland names, or NULL to include all wetlands. Default NULL. These wetlands are in the "Wetland" column of the dataset. Check the "Wetland" column in the dataset for valid values.
 #' @param valleys which valleys to include. This should be a character vector of valley names, or NULL to include all valleys. Default NULL. These valleys are in the "ValleyName" column of the dataset. Check the "ValleyName" column in the dataset for valid values.
@@ -21,7 +21,7 @@
 #' @examples
 #' \dontrun{
 #' get_bird_data(
-#'    df = data_clean,
+#'    dataset = data_clean,
 #'    programs = "eaws"
 #'    wetlands = c("macquarie marshes"),
 #'    valleys = NULL,
@@ -32,7 +32,7 @@
 #' )
 #' }
 get_bird_data <- function(
-  df = data_clean,
+  dataset = data_clean,
   programs = "eaws",
   wetlands,
   valleys,
@@ -80,16 +80,21 @@ get_bird_data <- function(
     tolower(wetlands)
   }
   if (!is.null(wetlands) && !any(wetlands %in% unique(tolower(df$Wetland)))) {
+    possible_wetlands <- unique(tolower(df$Wetland))
+
     stop(
-      "Invalid wetlands. Check the Wetland column in the dataset for valid values."
+      "Invalid wetlands. Value should be one of: ",
+      paste(possible_wetlands, collapse = ", ")
     )
   }
   valleys <- if (!is.null(valleys)) {
     tolower(valleys)
   }
   if (!is.null(valleys) && !any(valleys %in% unique(tolower(df$ValleyName)))) {
+    possible_valleys <- unique(tolower(df$ValleyName))
     stop(
-      "Invalid valleys. Check the ValleyName column in the dataset for valid values."
+      "Invalid valleys. Value should be one of: ",
+      paste(possible_valleys, collapse = ", ")
     )
   }
   basinDiv <- if (!is.null(basinDiv)) {
@@ -98,8 +103,10 @@ get_bird_data <- function(
   if (
     !is.null(basinDiv) && !any(basinDiv %in% unique(tolower(df$basinDivision)))
   ) {
+    possible_basinDiv <- unique(tolower(df$basinDivision))
     stop(
-      "Invalid basinDiv. Check the basinDivision column in the dataset for valid values."
+      "Invalid basinDiv. Value should be one of: ",
+      paste(possible_basinDiv, collapse = ", ")
     )
   }
   if (!is.null(grouping_cols)) {
@@ -154,7 +161,7 @@ get_bird_data <- function(
     dplyr::mutate(dplyr::across(tidyselect::where(is.character), tolower)) %>%
     {
       if ("eastern australian survey" %in% programs || "eaws" %in% programs) {
-        dplyr::filter(., survey_program %in% programs)
+        dplyr::filter(., survey_program %in% c("eastern australian survey"))
       } else if ("mdb combined" %in% programs || "mdbws" %in% programs) {
         dplyr::filter(
           .,
