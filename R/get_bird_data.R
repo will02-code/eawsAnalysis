@@ -114,11 +114,11 @@ get_bird_data <- function(
     final_filter <- list()
 
     if ("fx_group" %in% grouping_cols) {
-      final_filter <- c(final_filter, list(expr(fx_group != "ze")))
+      final_filter <- c(final_filter, list(rlang::expr(fx_group != "ze")))
     }
 
     if ("spp_code" %in% grouping_cols) {
-      final_filter <- c(final_filter, list(expr(spp_code != "nil")))
+      final_filter <- c(final_filter, list(rlang::expr(spp_code != "nil")))
     }
   } else {
     grouping_cols_syms <- NULL

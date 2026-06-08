@@ -4,10 +4,24 @@
 \name{eawsAnalysis-package}
 \alias{eawsAnalysis}
 \alias{eawsAnalysis-package}
-\title{eawsAnalysis: This package is used to analyse waterbird data from the Eastern Australian Waterbird Survey, and other associated waterbird surveys}
+\title{eawsAnalysis: Analyse data from the Eastern Australian Waterbird Survey}
 \description{
 This package provides an interface to the data from the Eastern Australian Waterbird Survey, and other associated waterbird surveys, and functions to analyse these data, including maps, summary tables, and trend analyses.
 }
+\section{Main Functions}{
+
+The core functions you'll use in this package:
+\itemize{
+\item \code{\link{clean_data_run_models}}: Main function which cleans data, runs models, and cleans output.
+\item \code{\link{run_mk_models}}: Side-car modeling function.
+\item \code{\link{fit_mk_model}}: Fit Mann-Kendall model to a single group of data.
+\item \code{\link{clean_clip_raw_data}}: Clip and clean raw waterbird data.
+\item \code{\link{get_bird_data}}: Extract cleaned waterbird data.
+\item \code{\link{clean_model_output}}: Clean output from run_mk_models().
+\item \code{\link{post_fitting_line_plot}}: Plot model results with ggplot2.
+}
+}
+
 \author{
 \strong{Maintainer}: Will Wright \email{will.wright@unsw.edu.au}
 
@@ -17,4 +31,8 @@ Authors:
 }
 
 }
+\keyword{##}
 \keyword{internal}
+\keyword{namespace:}
+\keyword{start}
+\keyword{usethis}

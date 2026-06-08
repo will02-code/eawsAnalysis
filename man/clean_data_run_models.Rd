@@ -5,19 +5,19 @@
 \title{Main function which cleans data, runs models, and cleans output}
 \usage{
 clean_data_run_models(
-  dataset,
+  dataset = data_clean,
   programs,
   metric,
   wetlands,
   valleys,
   basinDiv,
   grouping_cols,
-  decade_analysis,
+  decade_analysis = FALSE,
   by_condition = NULL
 )
 }
 \arguments{
-\item{dataset}{Dataset for analysis. Should be output from \code{clip_and_save_waterbird_data()}}
+\item{dataset}{Dataset for analysis. Should be output from \code{clean_clip_raw_data()} (or default \code{data_clean}).}
 
 \item{programs}{Which survey programs to include}
 

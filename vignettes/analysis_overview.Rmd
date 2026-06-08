@@ -1,0 +1,213 @@
+---
+title: "analysis_overview"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{analysis_overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(eawsAnalysis)
+library(dplyr)
+```
+
+
+#### Example analysis
+
+We explain the analysis for one metric (abundance) at basin scale with Eastern Australian Survey data below. The same process was repeated for all other metrics and scales.
+
+There are four main steps to the analysis: 1. Define parameters 2. Clean data 3. Run models 4. Clean output
+
+We have provided code snippets for each step below, but generally we recommend using the `clean_data_run_models()` function which combines all steps into one function call.
+
+##### Define parameters
+
+Here we define the parameters for the analysis.
+
+```{r}
+#| label: Define parameters
+#| code-summary: "Define analysis parameters"
+#| eval: false
+programs = c("Eastern Australian Survey") # 1. Specify survey programs to include
+dataset = data_clean                     # 2. Specify dataset to use
+metric = "abundance"                     # 3. Specify metric to analyse
+wetlands = NULL                          # 4. Specify wetlands to include (NULL for all)
+valleys = NULL                           # 5. Specify valleys to include (NULL for all)
+basinDiv = NULL
+grouping_cols = "spp_code"               # 6. Specify grouping column (NULL overall analysis)
+decade_analysis = FALSE                  # 7. Specify whether to run decade-wise analysis (TRUE/FALSE)
+by_condition = NULL
+
+```
+
+##### Clean data
+
+We need the data to be cleaned before running models. This involves filtering to the specified programs, wetlands, valleys, and grouping column, as well as calculating the metric of interest. See `get_bird_data()` function for details.
+
+```{r}
+#| label: Clean data
+#| code-summary: "Clean data for analysis"
+#| eval: false
+
+d2 <- get_bird_data(
+  dataset,
+  programs = programs,
+  metric = metric,
+  wetlands = wetlands,
+  valleys = valleys,
+  basinDiv = basinDiv,
+  grouping_cols = grouping_cols,
+  by_condition = by_condition
+
+)
+
+```
+
+##### Run models
+
+We then run the specified models on the cleaned data. See `run_mk_models()` function for details. We use the specified family for GLM, grouping column, and decade analysis parameters.
+
+```{r}
+#| label: Run models
+#| code-summary: "Run statistical models"
+#| eval: false
+output <- run_mk_models(
+  d2,
+
+  decade_analysis = decade_analysis,
+  grouping_cols = grouping_cols,
+  
+)
+
+
+```
+
+
+##### Clean output
+
+Finally, we clean the output from the models to extract relevant results, trends, and predictions. See `clean_model_output()` function for details.
+
+```{r}
+#| label: Clean output
+#| code-summary: "Clean model output"
+#| eval: false
+
+cleaned <- clean_model_output(
+  output,
+  decade_analysis = decade_analysis,
+  grouping_cols = grouping_cols
+)
+
+
+```
+
+##### Make plots and summary stats
+
+We can then make plots of the fitted models and calculate summary statistics using the `post_fitting_line_plot()` function and summarisation code within `clean_data_run_models()`.
+
+```{r}
+#| label: Plots and summary stats
+#| code-summary: "Generate plots and summary statistics"
+#| eval: false
+
+group_vars <- c(
+    if (decade_analysis) "decade",
+    if (!is.null(grouping_cols)) grouping_cols,
+    if (!is.null(by_condition)) by_condition
+  )
+
+cleaned_summary <- cleaned %>%
+    dplyr::ungroup() %>%
+    dplyr::summarise(
+      min = min(value),
+      q1 = stats::quantile(value, 0.25),
+      median = stats::median(value),
+      q3 = stats::quantile(value, 0.75),
+      max = max(value),
+      long_term_avg = mean(value),
+      dplyr::across(
+        tidyselect::any_of(c(
+          "percent_estimate",
+          "percent_p.value",
+          "mk_tau",
+          "mk_p_value",
+
+          'mk_logslope',
+          'mk_percentslope',
+          'mk_intercept',
+          "n_rows"
+        )),
+        dplyr::first
+      ),
+
+      .by = tidyselect::all_of(group_vars)
+    )
+
+  p <- post_fitting_line_plot(
+    cleaned,
+    decade_analysis = decade_analysis,
+    grouping_cols = grouping_cols,
+    metric = metric
+  )
+  p
+```
+
+###### Complete analysis function
+
+To simplify the analysis process, there is a wrapper function `clean_data_run_models()` which combines all steps into one function call. This function takes in the dataset and analysis parameters, cleans the data, runs the models, cleans the output, generates plots, and calculates summary statistics.
+
+```{r}
+#| label: Complete analysis function
+#| code-summary: "Run complete analysis in one function"
+result <- clean_data_run_models(
+  dataset = data_clean,
+  programs = c("Eastern Australian Survey"),
+  metric = "abundance",
+  wetlands = NULL,
+  valleys = NULL,
+  grouping_cols = "spp_code",
+  basinDiv = NULL, 
+  decade_analysis = FALSE
+)
+cleaned_data <- result[[1]]
+plot <- result[[2]]
+summary_stats <- result[[3]]
+```
+
+So we end up with three outputs: - `cleaned_data`: Cleaned data frame with model results and predictions - `plot`: ggplot2 object of fitted model plot - `summary_stats`: Data frame containing compiled trend statistics (e.g., Mann-Kendall tau, p-values).
+
+**Full data frame**
+
+
+```{r}
+#| label: print_cleaned_data
+#| code-summary: "Print cleaned data"
+cleaned_data
+```
+
+**Fitted model plot**
+
+```{r}
+#| label: fitted_model_plot
+#| fig-cap: "Fitted Model Plot"
+#| fig-cap-location: top
+plot
+```
+
+**Summary statistics**
+
+```{r}
+#| label: print_summary_stats
+#| code-summary: "Print summary statistics"
+summary_stats
+```
+
+

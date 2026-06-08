@@ -1,6 +1,6 @@
 #' Main function which cleans data, runs models, and cleans output
 #'
-#' @param dataset Dataset for analysis. Should be output from `clip_and_save_waterbird_data()`
+#' @param dataset Dataset for analysis. Should be output from `clean_clip_raw_data()` (or default `data_clean`).
 #' @param programs Which survey programs to include
 #' @param metric Metric to analyse. One of "abundance", "richness", "nests", "broods", "nest_richness", or "pct_filled"
 #' @param wetlands Which wetlands to include (default all)
@@ -21,14 +21,14 @@
 #'
 #' @export
 clean_data_run_models <- function(
-  dataset,
+  dataset = data_clean,
   programs,
   metric,
   wetlands,
   valleys,
   basinDiv,
   grouping_cols,
-  decade_analysis,
+  decade_analysis = FALSE,
   by_condition = NULL
 ) {
   d2 <- get_bird_data(
@@ -83,7 +83,7 @@ clean_data_run_models <- function(
           'mk_intercept',
           "n_rows"
         )),
-        first
+        dplyr::first
       ),
 
       .by = tidyselect::all_of(group_vars)
