@@ -13,11 +13,6 @@
 #' }
 #'
 #' @keywords internal
-#'
-#' ## usethis namespace: start
 #' @importFrom magrittr %>%
-#' @importFrom rlang :=
-#' @importFrom rlang .data
-#' @importFrom rlang expr
-#' ## usethis namespace: end
+#' @importFrom rlang := .data expr
 "_PACKAGE"
