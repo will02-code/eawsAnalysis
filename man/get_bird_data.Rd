@@ -5,8 +5,8 @@
 \title{Extract cleaned waterbird data}
 \usage{
 get_bird_data(
-  df = clipped_joined_dataset,
-  programs,
+  df = data_clean,
+  programs = "eaws",
   wetlands,
   valleys,
   basinDiv,
@@ -16,24 +16,39 @@ get_bird_data(
 )
 }
 \arguments{
-\item{df}{cleaned and joined dataframe}
+\item{df}{cleaned and joined dataframe, either from 'clean_clip_raw_data()' or the package dataset 'data_clean'}
 
-\item{programs}{Which survey programs to include}
+\item{programs}{Which survey programs to include. This should be a character vector of one or more of "eastern australian survey", "eaws", "mdb combined", or "mdbws". Default eaws.}
 
-\item{wetlands}{which wetlands to include}
+\item{wetlands}{which wetlands to include. This should be a character vector of wetland names, or NULL to include all wetlands. Default NULL. These wetlands are in the "Wetland" column of the dataset. Check the "Wetland" column in the dataset for valid values.}
 
-\item{valleys}{which valleys to include}
+\item{valleys}{which valleys to include. This should be a character vector of valley names, or NULL to include all valleys. Default NULL. These valleys are in the "ValleyName" column of the dataset. Check the "ValleyName" column in the dataset for valid values.}
+
+\item{basinDiv}{which basin divisions to include. This should be a character vector of basin division names, or NULL to include all. Default NULL. These are in the "basinDivision" column of the dataset.}
 
 \item{grouping_cols}{Column to group by (e.g. "ValleyName", "Wetland", "spp_code"). Default NULL}
 
 \item{metric}{Metric to analyse. One of "abundance", "richness", "nests", "broods", "nest_richness", or "pct_filled"}
+
+\item{by_condition}{whether to group by surface water condition. This should be one of "wetland_condition", "valley_condition", "basin_condition", or "division_condition". Default NULL. If specified, this will group by the condition of the wetland/valley/basin/division that each survey point belongs to. However, this does rely on the SWC of those units being joined to the dataset. It will rarely be used.}
 }
 \value{
 a dataframe with the specified metric calculated for each group and year
 }
 \description{
-Extract cleaned waterbird data
+This functions allows waterbird data to be extracted for specific survey programs, wetlands, valleys, and/or basin divisions, and grouped by specified columns (e.g. species). It also allows different metrics to be calculated (abundance, richness, nests, broods, nest richness, or percent filled).
 }
 \examples{
---- IGNORE ---
+\dontrun{
+get_bird_data(
+   df = data_clean,
+   programs = "eaws"
+   wetlands = c("macquarie marshes"),
+   valleys = NULL,
+   basinDiv = NULL,
+   grouping_cols = c("spp_code"),
+   metric = "abundance",
+   by_condition = NULL
+)
+}
 }
