@@ -53,7 +53,7 @@ get_bird_data <- function(
     "banrock station wetland complex",
     "talywalka system"
   )
-  df <- sf::st_drop_geometry(df)
+  df <- sf::st_drop_geometry(dataset)
   species_to_keep <- df %>%
     tidyr::complete(spp_code, surv_year, fill = list(count = 0)) %>%
     dplyr::group_by(surv_year, spp_code) %>%
