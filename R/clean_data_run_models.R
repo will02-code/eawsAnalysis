@@ -93,7 +93,8 @@ clean_data_run_models <- function(
     cleaned,
     decade_analysis = decade_analysis,
     grouping_cols = grouping_cols,
-    metric = metric
+    metric = metric,
+    trend_line = TRUE
   )
 
   return(list(cleaned, p, cleaned_summary))

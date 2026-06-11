@@ -5,7 +5,7 @@
 \title{Extract cleaned waterbird data}
 \usage{
 get_bird_data(
-  df = data_clean,
+  dataset = data_clean,
   programs = "eaws",
   wetlands,
   valleys,
@@ -16,7 +16,7 @@ get_bird_data(
 )
 }
 \arguments{
-\item{df}{cleaned and joined dataframe, either from 'clean_clip_raw_data()' or the package dataset 'data_clean'}
+\item{dataset}{cleaned and joined dataframe, either from 'clean_clip_raw_data()' or the package dataset 'data_clean'}
 
 \item{programs}{Which survey programs to include. This should be a character vector of one or more of "eastern australian survey", "eaws", "mdb combined", or "mdbws". Default eaws.}
 
@@ -41,7 +41,7 @@ This functions allows waterbird data to be extracted for specific survey program
 \examples{
 \dontrun{
 get_bird_data(
-   df = data_clean,
+   dataset = data_clean,
    programs = "eaws"
    wetlands = c("macquarie marshes"),
    valleys = NULL,

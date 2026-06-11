@@ -1,16 +1,24 @@
 #' Generate post-fitting line plot
 #' @param data Cleaned data from `clean_model_output()`
 #' @param decade_analysis Logical indicating if decadal analysis was performed
-#' @param grouping_cols Character string indicating grouping column used (if any)
+#' @param grouping_cols Character vector indicating grouping columns used (if any)
 #' @param metric Metric name for y-axis label
+#' @param trend_line Logical indicating if Mann-Kendall trend lines should be added
 #'
 post_fitting_line_plot <- function(
   data,
   decade_analysis,
-  grouping_cols,
-  metric
+  grouping_cols = NULL,
+  metric,
+  trend_line = TRUE
 ) {
-  metric_title <- stringr::str_to_title(metric)
+  metric_title <- if (trend_line) {
+    paste0(metric |> stringr::str_to_title(), " (logged)")
+  } else {
+    stringr::str_to_title(metric)
+  }
+
+  # Determine prediction vs value column
   y_var <- if (
     "predictions" %in% names(data) && any(!is.na(data$predictions))
   ) {
@@ -19,38 +27,89 @@ post_fitting_line_plot <- function(
     "value"
   }
 
-  # Identify our specific mapping columns
-  col_var <- if (length(grouping_cols) >= 1) {
-    rlang::sym(grouping_cols[1])
-  } else {
-    NULL
+  # Apply log transformation if plotting trend lines
+  if (trend_line) {
+    data <- data |> dplyr::mutate(value = log1p(value))
   }
-  facet_var <- if (length(grouping_cols) >= 2) {
-    rlang::sym(grouping_cols[2])
-  } else {
-    NULL
-  }
+
+  # Setup base plot
   p <- ggplot2::ggplot(data, ggplot2::aes(x = surv_year))
 
-  # Only add the group aesthetic if grouping_cols is not NULL/empty
-  if (length(grouping_cols) > 0) {
-    p <- p + ggplot2::aes(group = interaction(!!!rlang::syms(grouping_cols)))
+  # 1. Handle Mapping & Aesthetics dynamically
+  if (!is.null(grouping_cols) && length(grouping_cols) > 0) {
+    col_var <- rlang::sym(grouping_cols[1])
+    facet_var <- if (length(grouping_cols) >= 2) {
+      rlang::sym(grouping_cols[2])
+    } else {
+      NULL
+    }
+
+    # Apply global color/grouping aesthetics
+    p <- p +
+      ggplot2::aes(
+        group = interaction(!!!rlang::syms(grouping_cols)),
+        col = !!col_var
+      )
+  } else {
+    col_var <- NULL
+    facet_var <- NULL
   }
 
-  # Initialize plot with the primary color grouping
+  # 2. Add Geoms (Points and Lines are universal here)
   p <- p +
-    ggplot2::geom_point(ggplot2::aes(y = value, col = !!col_var)) +
-    ggplot2::geom_line(
-      ggplot2::aes(y = .data[[y_var]], col = !!col_var),
-      alpha = 0.5
-    ) +
-    my_theme(legend.position = "bottom") +
-    ggplot2::labs(x = "Year", y = metric_title)
+    ggplot2::geom_point(ggplot2::aes(y = value)) +
+    ggplot2::geom_line(ggplot2::aes(y = .data[[y_var]]), alpha = 0.5)
 
-  # Logic for Faceting
+  # 3. Handle Trend Line Overlay
+  if (trend_line) {
+    if (!is.null(col_var)) {
+      # Calculate grouped slopes/intercepts
+      group_trends <- data |>
+        dplyr::group_by(!!!rlang::syms(grouping_cols)) |>
+        dplyr::summarise(
+          mk_logslope = dplyr::first(mk_logslope),
+          mk_intercept = dplyr::first(mk_intercept),
+          .groups = "drop"
+        )
+
+      p <- p +
+        ggplot2::geom_abline(
+          data = group_trends,
+          ggplot2::aes(
+            slope = mk_logslope,
+            intercept = mk_intercept,
+            col = !!col_var
+          ),
+          linetype = "dashed"
+        )
+    } else {
+      # Single global trend line
+      p <- p +
+        ggplot2::geom_abline(
+          slope = data$mk_logslope[1],
+          intercept = data$mk_intercept[1],
+          linetype = "dashed"
+        )
+    }
+  }
+
+  # 4. Themes & Labels
+  # Apply theme base depending on trend_line status
+  if (trend_line) {
+    p <- p + my_theme()
+  } else {
+    p <- p + my_theme(legend.position = "bottom")
+  }
+
+  p <- p + ggplot2::labs(x = "Year", y = metric_title)
+
+  if (!is.null(col_var)) {
+    p <- p + ggplot2::labs(color = grouping_cols[1])
+  }
+
+  # 5. Faceting Logic
   if (decade_analysis) {
     if (!is.null(facet_var)) {
-      # Decades across the top, 2nd grouping variable down the side
       p <- p +
         ggplot2::facet_grid(
           rows = ggplot2::vars(!!facet_var),

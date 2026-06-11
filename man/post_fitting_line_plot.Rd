@@ -4,7 +4,13 @@
 \alias{post_fitting_line_plot}
 \title{Generate post-fitting line plot}
 \usage{
-post_fitting_line_plot(data, decade_analysis, grouping_cols, metric)
+post_fitting_line_plot(
+  data,
+  decade_analysis,
+  grouping_cols,
+  metric,
+  trend_line = TRUE
+)
 }
 \arguments{
 \item{data}{Cleaned data from \code{clean_model_output()}}
