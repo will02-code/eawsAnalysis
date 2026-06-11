@@ -73,7 +73,7 @@ d2 <- get_bird_data(
 
 ##### Run models
 
-We then run the specified models on the cleaned data. See `run_mk_models()` function for details. We use the specified family for GLM, grouping column, and decade analysis parameters.
+We then run the specified models on the cleaned data. See `run_mk_models()` function for details. We use the grouping column, and decade analysis parameters.
 
 ```{r}
 #| label: Run models

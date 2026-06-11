@@ -13,7 +13,8 @@ clean_data_run_models(
   basinDiv,
   grouping_cols,
   decade_analysis = FALSE,
-  by_condition = NULL
+  by_condition = NULL,
+  trend_line = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ clean_data_run_models(
 \item{decade_analysis}{Logical. If TRUE, runs models separately for each decade}
 
 \item{by_condition}{character string indicating the condition column used in the analysis (if any). This should be one of "wetland_condition", "valley_condition", "basin_condition", or "division_condition". Default NULL. If specified, this will group by the condition of the wetland/valley/basin/division that each survey point belongs to. However, this does rely on the SWC of those units being joined to the dataset. It will rarely be used.}
+
+\item{trend_line}{Include a trend line in the post-fitting line plot (default TRUE)}
 }
 \value{
 A list containing:
