@@ -7,7 +7,7 @@
 post_fitting_line_plot(
   data,
   decade_analysis,
-  grouping_cols,
+  grouping_cols = NULL,
   metric,
   trend_line = TRUE
 )
@@ -17,9 +17,11 @@ post_fitting_line_plot(
 
 \item{decade_analysis}{Logical indicating if decadal analysis was performed}
 
-\item{grouping_cols}{Character string indicating grouping column used (if any)}
+\item{grouping_cols}{Character vector indicating grouping columns used (if any)}
 
 \item{metric}{Metric name for y-axis label}
+
+\item{trend_line}{Logical indicating if Mann-Kendall trend lines should be added}
 }
 \description{
 Generate post-fitting line plot
