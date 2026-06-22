@@ -4,3 +4,5 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^waterbird_all\.csv$
+^vignettes/\.quarto$
+^vignettes/*_files$
