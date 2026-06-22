@@ -21,6 +21,26 @@ clean_clip_raw_data <- function(
   nsbasin,
   remove_adhoc = TRUE
 ) {
+  waterbird_data <- waterbird_data |>
+    dplyr::filter(
+      !(spp_code %in% c("CTN", "LCU", "LPL", "MSW", "RSP"))
+    ) |>
+
+    dplyr::mutate(
+      spp_code = case_when(
+        spp_code == "ALG" ~ "GRE",
+        spp_code == "BFP" ~ "SMW",
+        spp_code == "GOD" ~ "LGW",
+        spp_code == "HHG" ~ "GRE",
+        spp_code == "LTE" ~ "EGR",
+        spp_code == "PLE" ~ "EGR",
+        spp_code == "RCP" ~ "SMW",
+        spp_code == "RKD" ~ "SMW",
+        spp_code == "STS" ~ "SMW",
+        spp_code == "ABN" ~ "SMW",
+        TRUE ~ spp_code
+      )
+    )
   if (remove_adhoc == TRUE) {
     waterbirds_vect <- sf::st_as_sf(
       waterbird_data %>%
