@@ -7,6 +7,14 @@
 #' @param by_condition by_condition whether to group by surface water condition. This should be one of "wetland_condition", "valley_condition", "basin_condition", or "division_condition". Default NULL. If specified, this will group by the condition of the wetland/valley/basin/division that each survey point belongs to. However, this does rely on the SWC of those units being joined to the dataset. It will rarely be used.
 #' @returns A nested tibble containing the original data, model results, and warnings (if grouping_cols is provided) or overall.
 #'
+#' @description
+#' Run Mann-Kendall trend analyses on a dataset.
+#'
+#' This function relies on the `Kendall` package (run with the helper function `fit_mk_model()`)
+#' to perform the Mann-Kendall test. This function also provides a Theil-Sen median slope estimate.
+#'
+#'
+#'
 #' @export
 #' @examples
 #' \dontrun{
