@@ -1,0 +1,45 @@
+---
+title: "example_usecases"
+vignette: >
+  %\VignetteIndexEntry{example_usecases}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+# Overview
+
+This package was built to allow easy access to data from the Eastern Australian Waterbird Survey, and the Murray-Darling Basin Wetland Survey, and some basic analysis of trends in these data. This vignette covers two main functions of `eawsAnalysis`:
+
+- Extraction of waterbird data for downstream analysis (using `get_bird_data()`)
+
+- Analysis of trends in waterbird data (using `clean_data_run_models()`)
+
+# Installation
+
+```{r}
+#| label: setup
+#| eval: false
+#| 
+# This package can be installed from Github
+pak::pkg_install("will02-code/eawsAnalysis")
+# or 
+# remotes::install_github("will02-code/eawsAnalysis")
+
+
+```
+
+# Getting started
+
+```{r}
+# Load the package
+library(eawsAnalysis)
+# The package comes with data built in; load it
+data("data_clean")
+
+
+```
+

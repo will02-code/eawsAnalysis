@@ -1,10 +1,13 @@
 ---
 title: "analysis_overview"
-output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{analysis_overview}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{example_usecases}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
 ---
 
 ```{r, include = FALSE}
@@ -44,7 +47,7 @@ valleys = NULL                           # 5. Specify valleys to include (NULL f
 basinDiv = NULL
 grouping_cols = "spp_code"               # 6. Specify grouping column (NULL overall analysis)
 decade_analysis = FALSE                  # 7. Specify whether to run decade-wise analysis (TRUE/FALSE)
-by_condition = NULL
+by_condition = NULL 
 
 ```
 
