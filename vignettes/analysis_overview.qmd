@@ -1,7 +1,7 @@
 ---
 title: "analysis_overview"
 vignette: >
-  %\VignetteIndexEntry{example_usecases}
+  %\VignetteIndexEntry{analysis_overview}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:

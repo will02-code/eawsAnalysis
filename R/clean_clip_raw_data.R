@@ -27,7 +27,7 @@ clean_clip_raw_data <- function(
     ) |>
 
     dplyr::mutate(
-      spp_code = case_when(
+      spp_code = dplyr::case_when(
         spp_code == "ALG" ~ "GRE",
         spp_code == "BFP" ~ "SMW",
         spp_code == "GOD" ~ "LGW",

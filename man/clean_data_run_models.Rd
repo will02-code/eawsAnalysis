@@ -42,10 +42,12 @@ clean_data_run_models(
 A list containing:
 \enumerate{
 \item A cleaned data frame with model results
-\item A ggplot object with the post-fitting line plot
+\item A ggplot object with the figure
 \item A summary data frame with summary statistics and model results by group (if
 }
 }
 \description{
-Main function which cleans data, runs models, and cleans output
+Cleans data, runs models, and generates summary statistics for waterbird data.
+Data is filtered based on the provided parameters, then Mann-Kendall trend analyses are performed using \code{run_mk_models()}.
+The output is cleaned and summarised, and a figure is generated.
 }

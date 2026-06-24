@@ -24,7 +24,10 @@ run_mk_models(
 A nested tibble containing the original data, model results, and warnings (if grouping_cols is provided) or overall.
 }
 \description{
-Run trend models models on cleaned dataset from \code{get_bird_data()}, using \code{fit_mk_model()} for Mann-Kendall trend detection and Theil-Sen slope estimation.
+Run Mann-Kendall trend analyses on a dataset.
+
+This function relies on the \code{Kendall} package (run with the helper function \code{fit_mk_model()})
+to perform the Mann-Kendall test. This function also provides a Theil-Sen median slope estimate.
 }
 \examples{
 \dontrun{
