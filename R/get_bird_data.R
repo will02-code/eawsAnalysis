@@ -252,13 +252,30 @@ get_bird_data <- function(
     dplyr::mutate(metric = metric) %>%
     {
       if (!is.null(grouping_cols_syms)) {
-        dplyr::filter(., !!!final_filter) %>%
+        completed <- dplyr::filter(., !!!final_filter) %>%
           dplyr::mutate(dplyr::across(c(!!!grouping_cols_syms), as.factor)) %>%
           tidyr::complete(
             surv_year,
             !!!grouping_cols_syms,
             fill = list(value = 0)
           )
+
+        # For MDBWS: non-icon wetlands weren't surveyed before 2010, so
+        # zeros introduced by complete() for those years should be NA
+        if (
+          ("mdb combined" %in% programs || "mdbws" %in% programs) &&
+            "Wetland" %in% grouping_cols
+        ) {
+          completed <- completed %>%
+            dplyr::mutate(
+              value = dplyr::if_else(
+                !Wetland %in% icon_wetlands & surv_year < 2010,
+                NA_real_,
+                value
+              )
+            )
+        }
+        completed
       } else {
         all_years <- tibble::tibble(
           surv_year = seq(min(.$surv_year), max(.$surv_year), by = 1)
