@@ -4,6 +4,7 @@
 #' @param grouping_cols Character vector indicating grouping columns used (if any)
 #' @param metric Metric name for y-axis label
 #' @param trend_line Logical indicating if Mann-Kendall trend lines should be added
+#' @export
 #'
 post_fitting_line_plot <- function(
   data,
