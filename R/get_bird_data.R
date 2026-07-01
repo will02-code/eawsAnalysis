@@ -348,8 +348,7 @@ get_bird_data <- function(
           "surv_year"
         )
 
-        . %>%
-          dplyr::group_by(dplyr::across(dplyr::all_of(fill_groups))) %>%
+        dplyr::group_by(., dplyr::across(dplyr::all_of(fill_groups))) %>%
           dplyr::mutate(
             !!rlang::sym(by_condition) := {
               x <- .data[[by_condition]]
