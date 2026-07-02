@@ -7,6 +7,7 @@
 #' @param nsbasin sf object of basin divisions (north and south)
 #' @param remove_adhoc Logical. Whether to remove adhoc surveys. Default TRUE.
 #' @param clip_to_mdb Logical. Whether to clip to the MDB. Default TRUE.
+#' @param replicate_agg Function to aggregate replicate counts. For the project, we took the max, but could also take mean, or first. Default max.
 #' @returns a dataframe with waterbird data clipped to the Basin, and joined with the assets, valleys, and nsbasin data
 #' @description
 #' This function takes the raw waterbird data, clips it to the Basin, and joins it with the assets, valleys, and nsbasin data, so that each point is assigned to the wetland, valley, and basin it belongs to.
@@ -20,12 +21,13 @@ clean_clip_raw_data <- function(
   valleys,
   nsbasin,
   remove_adhoc = TRUE,
-  clip_to_mdb = TRUE
+  clip_to_mdb = TRUE,
+  replicate_agg = max
 ) {
-  waterbird_data <- waterbird_data |>
+  waterbird_data <- waterbird_data %>%
     dplyr::filter(
       !(spp_code %in% c("CTN", "LCU", "LPL", "MSW", "RSP"))
-    ) |>
+    ) %>%
 
     dplyr::mutate(
       spp_code = dplyr::case_when(
@@ -60,7 +62,7 @@ clean_clip_raw_data <- function(
         dtplyr::lazy_dt() %>%
         dplyr::group_by(surv_year, wetland_id, spp_code, replicate_count) %>%
         dplyr::summarise(
-          # Apply max() to the numeric/count columns
+          # sum the same species counts for the same wetland, year, and replicate count
           dplyr::across(c(count, nest, broods, breeding_index), \(x) {
             sum(x, na.rm = TRUE)
           }),
@@ -69,10 +71,11 @@ clean_clip_raw_data <- function(
           .groups = "drop"
         ) %>%
         dplyr::group_by(surv_year, wetland_id, spp_code) %>%
+        dplyr::arrange(surv_year, wetland_id, spp_code, replicate_count) %>%
         dplyr::summarise(
-          # Apply max() to the numeric/count columns
+          # Apply replicate_agg() to the numeric/count columns
           dplyr::across(c(count, nest, broods, breeding_index), \(x) {
-            max(x, na.rm = TRUE)
+            replicate_agg(x, na.rm = TRUE)
           }),
           # Apply first() to everything else
           dplyr::across(!c(count, nest, broods, breeding_index), dplyr::first),
@@ -95,11 +98,13 @@ clean_clip_raw_data <- function(
           dplyr::across(!c(count, nest, broods, breeding_index), dplyr::first),
           .groups = "drop"
         ) %>%
+
         dplyr::group_by(surv_year, wetland_id, spp_code) %>%
+        dplyr::arrange(surv_year, wetland_id, spp_code, replicate_count) %>%
         dplyr::summarise(
           # Apply max() to the numeric/count columns
           dplyr::across(c(count, nest, broods, breeding_index), \(x) {
-            max(x, na.rm = TRUE)
+            replicate_agg(x, na.rm = TRUE)
           }),
           # Apply first() to everything else
           dplyr::across(!c(count, nest, broods, breeding_index), dplyr::first),
@@ -124,10 +129,11 @@ clean_clip_raw_data <- function(
         .groups = "drop"
       ) %>%
       dplyr::group_by(surv_year, wetland_id, spp_code) %>%
+      dplyr::arrange(surv_year, wetland_id, spp_code, replicate_count) %>%
       dplyr::summarise(
         # Apply max() to the numeric/count columns
         dplyr::across(c(count, nest, broods, breeding_index), \(x) {
-          max(x, na.rm = TRUE)
+          replicate_agg(x, na.rm = TRUE)
         }),
         # Apply first() to everything else
         dplyr::across(!c(count, nest, broods, breeding_index), first),
