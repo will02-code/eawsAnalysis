@@ -6,11 +6,13 @@
 \usage{
 clean_clip_raw_data(
   waterbird_data,
-  basin,
-  assets,
-  valleys,
-  nsbasin,
-  remove_adhoc = TRUE
+  basin = basin,
+  assets = assets,
+  valleys = valleys,
+  nsbasin = nsbasin,
+  remove_adhoc = TRUE,
+  clip_to_mdb = TRUE,
+  replicate_agg = max
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ clean_clip_raw_data(
 \item{nsbasin}{sf object of basin divisions (north and south)}
 
 \item{remove_adhoc}{Logical. Whether to remove adhoc surveys. Default TRUE.}
+
+\item{clip_to_mdb}{Logical. Whether to clip to the MDB. Default TRUE.}
+
+\item{replicate_agg}{Function to aggregate replicate counts. For the project, we took the max, but could also take mean, or first. Default max.}
 }
 \value{
 a dataframe with waterbird data clipped to the Basin, and joined with the assets, valleys, and nsbasin data
