@@ -1,6 +1,6 @@
 Package: eawsAnalysis
 Title: This package is used to analyse waterbird data from the Eastern Australian Waterbird Survey, and other associated waterbird surveys
-Version: 0.1
+Version: 1.0
 Authors@R: 
     person("Will", "Wright", , "will.wright@unsw.edu.au", role = c("aut", "cre"))
 Description: This package provides an interface to the data from the Eastern Australian Waterbird Survey, and other associated waterbird surveys, and functions to analyse these data, including maps, summary tables, and trend analyses.
@@ -23,7 +23,7 @@ Imports:
     tidyr,
     tidyselect
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 LazyData: true
 LazyDataCompression: xz
 Suggests: 

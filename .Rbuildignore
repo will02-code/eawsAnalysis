@@ -6,3 +6,6 @@
 ^waterbird_all\.csv$
 ^vignettes/\.quarto$
 ^vignettes/*_files$
+^AGENTS\.md$
+^test\.R$
+^None Data \(2\)\.csv$

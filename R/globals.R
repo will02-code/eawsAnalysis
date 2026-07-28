@@ -37,5 +37,6 @@ utils::globalVariables(c(
   "mk_percentslope",
   "mk_tau",
   "mk_warnings",
-  "n_rows"
+  "n_rows",
+  "count_number"
 ))
