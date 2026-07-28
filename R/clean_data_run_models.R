@@ -71,12 +71,12 @@ clean_data_run_models <- function(
   cleaned_summary <- cleaned %>%
     dplyr::ungroup() %>%
     dplyr::summarise(
-      min = min(value),
-      q1 = stats::quantile(value, 0.25),
-      median = stats::median(value),
-      q3 = stats::quantile(value, 0.75),
-      max = max(value),
-      long_term_avg = mean(value),
+      min = min(value, na.rm = TRUE),
+      q1 = stats::quantile(value, 0.25, na.rm = TRUE),
+      median = stats::median(value, na.rm = TRUE),
+      q3 = stats::quantile(value, 0.75, na.rm = TRUE),
+      max = max(value, na.rm = TRUE),
+      long_term_avg = mean(value, na.rm = TRUE),
       dplyr::across(
         tidyselect::any_of(c(
           "percent_estimate",
