@@ -44,7 +44,7 @@ Steps 2–5 are wrapped in a single convenience function:
 ```r
 library(eawsAnalysis)
 
-# Basin-wide abundance trend for the EAWS program, grouped by wetland
+# Basin-wide abundance trend for the EAWS program
 results <- clean_data_run_models(
   dataset       = data_clean,
   programs      = "eaws",
@@ -52,12 +52,12 @@ results <- clean_data_run_models(
   wetlands      = NULL,
   valleys       = NULL,
   basinDiv      = NULL,
-  grouping_cols = "Wetland"
+  grouping_cols = NULL
 )
 
 cleaned_data  <- results[[1]]   # tidy data frame with model coefficients
 trend_plot    <- results[[2]]   # ggplot2 figure
-summary_table <- results[[3]]   # summary statistics per group
+summary_table <- results[[3]]   # summary statistics 
 ```
 
 ## Built-in data
@@ -88,7 +88,7 @@ summary_table <- results[[3]]   # summary statistics per group
 | `programs` string | Description |
 |-------------------|-------------|
 | `"eaws"` / `"eastern australian survey"` | Eastern Australian Waterbird Survey |
-| `"mdb combined"` / `"mdbws"` | Murray-Darling Basin combined program |
+| `"mdb combined"` / `"mdbws"` | Targeted survey of key wetlands in the Basin |
 
 ## License
 
